@@ -14,6 +14,8 @@
         <sonar.exclusions>**/frontend/src/assets/js/**/*,**/frontend/config/**/*,**/frontend/build/**/*,**/frontend/node/**/*,**/node_modules/**/*,**/frontend/dist/**/*</sonar.exclusions>
         <sonar.language>js</sonar.language>
         <sonar.sources>src/main/frontend</sonar.sources>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
