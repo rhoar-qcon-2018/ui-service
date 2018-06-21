@@ -96,28 +96,13 @@ export default {
       this.service.publish(insult, resultHandler);
     },
     getInsult() {
-      var formatter = (res) => {
-          var data = {};
-          if (typeof res === "string") {
-              data = JSON.parse(res);
-          } else {
-              data = res;
-          }
-          var insult = "";
-          if (data.hasOwnProperty("subject") && data.subject.length > 0) {
-              insult = data.subject+"; thou dost be a "+data.adj1+", "+data.adj2+", "+data.noun+"!";
-          } else {
-              insult = "Thou "+data.adj1+", "+data.adj2+", "+data.noun+"!";
-          }
-          return insult;
-      };
       if (this.isReactiveEnabled) {
           var resultHandler = (err, res) => {
               if (err===null) {
                   if (this.insults.length == 10) {
                       this.insults.shift();
                   }
-                  this.insults.push(formatter(JSON.stringify(res)));
+                  this.insults.push(res);
               } else {
                   console.log("Error calling service: "+err);
               }
