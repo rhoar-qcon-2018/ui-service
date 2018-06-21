@@ -93,7 +93,7 @@ export default {
               console.log("Error calling service: "+err);
           }
       }
-      this.service.publish(JSON.stringify(insult), resultHandler)
+      this.service.publish(insult, resultHandler);
     },
     getInsult() {
       var formatter = (res) => {
