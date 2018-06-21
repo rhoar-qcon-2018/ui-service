@@ -156,7 +156,8 @@ export default {
                 if (this.favorites.length == 10) {
                     this.favorites.shift();
                 }
-                this.favorites.push(formatter(JSON.stringify(res)));
+                if (typeof res === '')
+                this.favorites.push(res);
             }
         });
     };
