@@ -1,7 +1,7 @@
 <template>
   <div id="q-app">
     <main>
-      <img src="~assets/logo.png" alt="Red Hat OpenShift Application Runtimes - Insult UI" />
+      <img width="450px" height="auto" src="~assets/logo.png" alt="Red Hat OpenShift Application Runtimes - Insult UI" />
     </main>
     <view-space>
       <router-view></router-view>
@@ -20,7 +20,7 @@ export default {}
 @import '~variables'
 
 main
-  width 50%
+  width 450px
   margin auto
   margin-top 40px
 

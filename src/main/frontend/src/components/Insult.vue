@@ -1,27 +1,43 @@
 <template>
   <div>
     <div class="row inline justify-center items-start">
-      <div class="col-6" style="padding-right: 4px;">
-        <q-input v-model="nameInput" type="text" placeholder="Target"></q-input>
+      <div class="col-12">
+        <q-toggle class="short" right-label v-model="isReactiveEnabled" color="yellow" :label="connStatus"></q-toggle>
+      </div>
+    </div>
+    <div class="row inline justify-center items-start">
+      <div class="col-12" style="padding-right: 4px;">
         <div class="side-by-side">
           <q-btn color="red" @click="getInsult">Insult {{target}}!</q-btn>
           <q-btn color="green" @click="clearHistory">I Didn't Mean It!</q-btn>
         </div>
       </div>
       <div class="col-6" style="padding-left: 4px;">
-        <textarea cols="60" rows="10" v-model="displayInsults"></textarea>
+        <h3>My Insults</h3>
       </div>
-    </div>
-    <div class="row inline justify-center items-start">
-      <div class="col-12">
-        <q-toggle right-label v-model="isReactiveEnabled" color="yellow" :label="connStatus"></q-toggle>
+      <div class="col-6" style="padding-left: 4px;">
+        <h3>Favorites</h3>
+      </div>
+      <div class="col-6" style="padding-left: 4px;">
+        <q-card v-for="insult in insults" color="primary">
+          <q-card-title text-color="black">
+            Thou dost be a {{ insult.adj1 }}, {{ insult.adj2 }}, {{ insult.noun }}
+            <q-btn fab flat color="transparent" text-color="primary" style="width: 32px; height: 32px; top: 0; left: 48px" icon="thumb_up" @click="favoriteInsult(insult)" />
+          </q-card-title>
+        </q-card>
+      </div>
+      <div class="col-6" style="padding-left: 4px;">
+        <q-card v-for="insult in favorites">
+          <q-card-main>Thous dost be a {{ insult.adj1 }}, {{ insult.adj2 }}, {{ insult.noun }}</q-card-main>
+        </q-card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { QBtn, QToggle, QInput } from 'quasar'
+import { QBtn, QToggle, QInput, QCard, QCardActions, QCardMain, QIcon } from 'quasar'
+import 'quasar-extras/material-icons'
 import EventBus from 'vertx3-eventbus-client'
 import InsultService from 'assets/insult_service-proxy'
 import axios from 'axios'
@@ -31,7 +47,11 @@ export default {
   components: {
     QBtn,
     QToggle,
-    QInput
+    QInput,
+    QCard,
+    QCardMain,
+    QCardActions,
+    QIcon
   },
   data() {
     return {
@@ -41,13 +61,11 @@ export default {
         service: {},
         rest: {},
         baseURL: "",
-        insults: []
+        insults: [],
+        favorites: []
     }
   },
   computed: {
-      displayInsults() {
-          return this.insults.join("\n");
-      },
       target() {
           if (this.nameInput.length == 0) {
               return "ME";
@@ -66,6 +84,14 @@ export default {
   methods: {
     clearHistory() {
         this.insults = [];
+    },
+    favoriteInsult(insult) {
+      var resultHandler = (err, res) => {
+          if (err!==null) {
+              console.log("Error calling service: "+err);
+          }
+      }
+      this.service.publish(JSON.stringify(insult), resultHandler)
     },
     getInsult() {
       var formatter = (res) => {
@@ -94,18 +120,10 @@ export default {
                   console.log("Error calling service: "+err);
               }
           };
-          if (this.nameInput==="" || this.nameInput === null) {
-              this.service.getInsult(resultHandler);
-          } else {
-              this.service.namedInsult(this.nameInput, resultHandler);
-          }
+          this.service.getREST(resultHandler);
       } else {
           var reqPromise = {};
-          if (this.nameInput==="" || this.nameInput === null) {
-              reqPromise = this.rest.get("/api/v1/insult");
-          } else {
-              reqPromise = this.rest.post("/api/v1/insult", { name: this.nameInput });
-          }
+          reqPromise = this.rest.get("/api/v1/insult");
           reqPromise
               .then((resp) => {
                   if (this.insults.length == 10) {
@@ -120,7 +138,15 @@ export default {
     }
   },
   created: function () {
-    this.baseURL = window.base_url===""?"http://localhost:8080":window.base_url;
+    let loc_proto = window.location.protocol;
+    let loc_host = window.location.hostname.replace(/^ui-service/, 'insult-service');
+    let loc_port = window.location.port;
+
+    if (loc_port === "") {
+        this.base_url = loc_proto + "//" + loc_host;
+    } else {
+        this.base_url = loc_proto + "//" + loc_host + ":" + loc_port;
+    }
     console.log("BaseURL: "+this.baseURL);
 
     var options = {
@@ -137,6 +163,15 @@ export default {
     this.eventBus.onopen = () => {
         console.log("BaseURL: "+this.baseURL);
         this.service = new InsultService(this.eventBus, "insult.service");
+
+        this.eventBus.registerHandler('insult.favorites', (err, res) => {
+            if (err===null) {
+                if (this.favorites.length == 10) {
+                    this.favorites.shift();
+                }
+                this.favorites.push(formatter(JSON.stringify(res)));
+            }
+        });
     };
     this.rest = axios.create({
         baseURL: this.baseURL,
@@ -153,15 +188,18 @@ export default {
 <style lang="stylus" scoped>
 .row
   width: 100%
-.margined
-  padding-left: 3px
-  width: 120px
+  margin-top: 4px
 .col-6
   width: 50%
   margin: auto
+  text-align center
 .side-by-side
   justify-content
 .col-12
   width: 100%
+  margin: auto
+  text-align center
+.short
+  width: 120px
   margin: auto
 </style>

@@ -104,69 +104,18 @@
                 <groupId>io.reactiverse</groupId>
                 <artifactId>vertx-maven-plugin</artifactId>
                 <version>1.0.15</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <id>cleanUpTestArtifacts</id>
+                        <id>vmp</id>
                         <goals>
-                            <goal>clean</goal>
+                            <goal>initialize</goal>
+                            <goal>package</goal>
                         </goals>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${project.basedir}</directory>
-                                    <includes>
-                                        <include>*.mv.db</include>
-                                        <include>*.trace.db</include>
-                                    </includes>
-                                </fileset>
-                            </filesets>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <executable>mvn</executable>
-                            <arguments>
-                                <argument>vertx:run</argument>
-                            </arguments>
-                            <async>true</async>
-                            <asyncDestroyOnShutdown>false</asyncDestroyOnShutdown>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>dev</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <executable>mvn</executable>
-                            <arguments>
-                                <argument>package</argument>
-                                <argument>vertx:run</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>vertx-maven-plugin</artifactId>
+                <configuration>
+                    <redeploy>true</redeploy>
+                </configuration>
             </plugin>
         </plugins>
     </build>
