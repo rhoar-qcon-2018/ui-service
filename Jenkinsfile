@@ -201,10 +201,12 @@ pipeline {
   }
   stages {
     stage('Debugging Info') {
-      script {
-        echo "CI/CD Project: ${ciProject}"
-        echo "Test Project: ${testProject}"
-        echo "Dev Project: ${devProject}"
+      steps {
+        script {
+          echo "CI/CD Project: ${ciProject}"
+          echo "Test Project: ${testProject}"
+          echo "Dev Project: ${devProject}"
+        }
       }
     }
     stage('Quality And Security') {
