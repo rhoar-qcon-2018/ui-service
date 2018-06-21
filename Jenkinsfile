@@ -97,17 +97,21 @@ items:
           name: '${project}'
       spec:
         containers:
-        - image: '${project}'
-          imagePullPolicy: Always
-          name: '${project}'
-          env:
-          - name: KUBERNETES_NAMESPACE
-            value: ${targetNamespace}
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
+          - image: '${project}'
+            imagePullPolicy: Always
+            name: '${project}'
+            env:
+            - name: KUBERNETES_NAMESPACE
+              value: ${targetNamespace}
+            ports:
+              - containerPort: 5800
+                protocol: TCP
+              - containerPort: 8778
+                protocol: TCP
+              - containerPort: 8080
+                protocol: TCP
+            resources: {}
+            terminationMessagePath: /dev/termination-log
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         securityContext: {}
@@ -135,6 +139,14 @@ items:
         port: 8080
         protocol: TCP
         targetPort: 8080
+      - name: jolokia
+        port: 8778
+        protocol: TCP
+        targetPort: 8778
+      - name: cluster
+        port: 5800
+        protocol: TCP
+        targetPort: 5800
     selector:
       name: '${project}'
     sessionAffinity: None
