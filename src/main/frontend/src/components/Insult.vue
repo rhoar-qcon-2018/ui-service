@@ -44,6 +44,8 @@ import EventBus from 'vertx3-eventbus-client'
 import InsultService from 'assets/insult_service-proxy'
 import axios from 'axios'
 
+const MAX_LIST_LENGTH = 5;
+
 export default {
   name: 'insult',
   components: {
@@ -99,7 +101,7 @@ export default {
       if (this.isReactiveEnabled) {
           var resultHandler = (err, res) => {
               if (err===null) {
-                  if (this.insults.length == 10) {
+                  if (this.insults.length == MAX_LIST_LENGTH) {
                       this.insults.shift();
                   }
                   this.insults.push(res);
@@ -113,7 +115,7 @@ export default {
           reqPromise = this.rest.get("/api/v1/insult");
           reqPromise
               .then((resp) => {
-                  if (this.insults.length == 10) {
+                  if (this.insults.length == MAX_LIST_LENGTH) {
                       this.insults.shift();
                   }
                   this.insults.push(resp.data);
@@ -153,7 +155,7 @@ export default {
 
         this.eventBus.registerHandler('insult.favorites', (err, res) => {
             if (err===null) {
-                if (this.favorites.length == 10) {
+                if (this.favorites.length == MAX_LIST_LENGTH) {
                     this.favorites.shift();
                 }
                 this.favorites.push(res);
