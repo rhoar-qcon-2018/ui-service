@@ -143,9 +143,9 @@ export default {
     let loc_port = window.location.port;
 
     if (loc_port === "") {
-        this.base_url = loc_proto + "//" + loc_host;
+        this.baseURL = loc_proto + "//" + loc_host;
     } else {
-        this.base_url = loc_proto + "//" + loc_host + ":" + loc_port;
+        this.baseURL = loc_proto + "//" + loc_host + ":" + loc_port;
     }
     console.log("BaseURL: "+this.baseURL);
 
