@@ -21,7 +21,7 @@
       <div class="col-6" style="padding-left: 4px;">
         <q-card v-for="insult in insults" color="primary">
           <q-card-title text-color="black">
-            Thou dost be a {{ insult.adjectives[0] }}, {{ insult.adjectives[1] }}, {{ insult.noun }}
+            Thou dost be a {{ insult.adj1 }}, {{ insult.adj2 }}, {{ insult.noun }}
             <q-btn fab flat color="transparent" text-color="primary" style="width: 32px; height: 32px; top: 0; left: 48px" icon="thumb_up" @click="favoriteInsult(insult)" />
           </q-card-title>
         </q-card>
@@ -29,7 +29,7 @@
       <div class="col-6" style="padding-left: 4px;">
         <q-card v-for="insult in favorites">
           <q-card-title text-color="black">
-            Thou dost be a {{ insult.adjectives[0] }}, {{ insult.adjectives[1] }}, {{ insult.noun }}
+            Thou dost be a {{ insult.adj1 }}, {{ insult.adj2 }}, {{ insult.noun }}
           </q-card-title>
         </q-card>
       </div>
