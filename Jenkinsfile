@@ -164,7 +164,7 @@ pipeline {
     label 'jenkins-slave-mvn'
   }
   environment {
-    PROJECT_NAME = 'insult-service'
+    PROJECT_NAME = 'ui-service'
     KUBERNETES_NAMESPACE = "${ciProject}"
   }
   stages {
