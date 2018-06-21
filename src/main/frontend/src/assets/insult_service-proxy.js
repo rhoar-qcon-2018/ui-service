@@ -45,44 +45,29 @@
     };
 
     /**
+     Retrieve an insult from the child services and build the insult payload
 
      @public
-     @param resultHandler {function} 
+     @param insultGetHandler {function} A  callback for the results 
      */
-    this.getInsult = function(resultHandler) {
+    this.getREST = function(insultGetHandler) {
       var __args = arguments;
       if (__args.length === 1 && typeof __args[0] === 'function') {
         if (closed) {
           throw new Error('Proxy is closed');
         }
-        j_eb.send(j_address, {}, {"action":"getInsult"}, function(err, result) { __args[0](err, result &&result.body); });
+        j_eb.send(j_address, {}, {"action":"getREST"}, function(err, result) { __args[0](err, result &&result.body); });
         return;
       } else throw new TypeError('function invoked with invalid arguments');
     };
 
     /**
+     Check the health of this service
 
      @public
-     @param name {string} 
-     @param resultHandler {function} 
+     @param healthCheckHandler {function} A  callback for the results 
      */
-    this.namedInsult = function(name, resultHandler) {
-      var __args = arguments;
-      if (__args.length === 2 && typeof __args[0] === 'string' && typeof __args[1] === 'function') {
-        if (closed) {
-          throw new Error('Proxy is closed');
-        }
-        j_eb.send(j_address, {"name":__args[0]}, {"action":"namedInsult"}, function(err, result) { __args[1](err, result &&result.body); });
-        return;
-      } else throw new TypeError('function invoked with invalid arguments');
-    };
-
-    /**
-
-     @public
-     @param resultHandler {function} 
-     */
-    this.check = function(resultHandler) {
+    this.check = function(healthCheckHandler) {
       var __args = arguments;
       if (__args.length === 1 && typeof __args[0] === 'function') {
         if (closed) {
@@ -90,6 +75,25 @@
         }
         j_eb.send(j_address, {}, {"action":"check"}, function(err, result) { __args[0](err, result &&result.body); });
         return;
+      } else throw new TypeError('function invoked with invalid arguments');
+    };
+
+    /**
+     Publish a "liked" insult to the Kafka queue to be distributed to all of the other clusters
+
+     @public
+     @param insult {Object} An insult made up of 2 adjectives and a noun 
+     @param insultPublishHandler {function} A  callback for the results 
+     @return {InsultService}
+     */
+    this.publish = function(insult, insultPublishHandler) {
+      var __args = arguments;
+      if (__args.length === 2 && (typeof __args[0] === 'object' && __args[0] != null) && typeof __args[1] === 'function') {
+        if (closed) {
+          throw new Error('Proxy is closed');
+        }
+        j_eb.send(j_address, {"insult":__args[0]}, {"action":"publish"}, function(err, result) { __args[1](err, result &&result.body); });
+        return that;
       } else throw new TypeError('function invoked with invalid arguments');
     };
 
