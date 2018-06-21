@@ -4,8 +4,11 @@ def devProject = 'labs-dev'
 openshift.withCluster() {
   openshift.withProject() {
     ciProject = openshift.project()
+    println(ciProject)
     testProject = ciProject.replaceFirst(/^labs-ci-cd/, 'labs-test')
+    println(testProject)
     devProject = ciProject.replaceFirst(/^labs-ci-cd/, 'labs-dev')
+    println(devProject)
   }
 }
 
