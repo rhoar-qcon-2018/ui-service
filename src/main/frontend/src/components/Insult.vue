@@ -116,7 +116,7 @@ export default {
                   if (this.insults.length == 10) {
                       this.insults.shift();
                   }
-                  this.insults.push(formatter(resp.data));
+                  this.insults.push(resp.data);
               })
               .catch((err) => {
                   console.log(err);
