@@ -158,7 +158,7 @@ export default {
                 if (this.favorites.length == MAX_LIST_LENGTH) {
                     this.favorites.shift();
                 }
-                this.favorites.push(res);
+                this.favorites.push(res.body);
             }
         });
     };
