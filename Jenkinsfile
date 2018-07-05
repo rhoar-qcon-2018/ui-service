@@ -196,15 +196,6 @@ pipeline {
     KUBERNETES_NAMESPACE = "${ciProject}"
   }
   stages {
-    stage('Debugging Info') {
-      steps {
-        script {
-          echo "CI/CD Project: ${ciProject}"
-          echo "Test Project: ${testProject}"
-          echo "Dev Project: ${devProject}"
-        }
-      }
-    }
     stage('Quality And Security') {
       parallel {
         stage('OWASP Dependency Check') {
