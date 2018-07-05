@@ -34,25 +34,15 @@ public class MainVerticle extends AbstractVerticle {
      * @return A {@link Maybe} which may contain the configuration as a {@link JsonObject}
      */
     Maybe<JsonObject> getConfig() {
-        ConfigStoreOptions localConfig = new ConfigStoreOptions()
-                .setType("file")
-                .setFormat("json")
-                .setConfig(new JsonObject().put("path", "/opt/docker_config.json"))
-                .setOptional(true);
+        JsonObject configMapConfig = new JsonObject()
+                                            .put("name", "ui-config")
+                                            .put("optional", true);
+        ConfigStoreOptions confOpts = new ConfigStoreOptions()
+                .setType("configmap")
+                .setConfig(configMapConfig);
 
         ConfigRetrieverOptions retrieverOptions = new ConfigRetrieverOptions()
-                .addStore(localConfig);
-        // Check to see if we are running on Kubernetes/OCP
-        if (System.getenv().containsKey("KUBERNETES_NAMESPACE")) {
-
-            ConfigStoreOptions confOpts = new ConfigStoreOptions()
-                    .setType("configmap")
-                    .setConfig(new JsonObject()
-                            .put("name", "ui-config")
-                            .put("optional", true)
-                    );
-            retrieverOptions.addStore(confOpts);
-        }
+                .addStore(confOpts);
         return ConfigRetriever.create(vertx, retrieverOptions).rxGetConfig().toMaybe();
     }
 
@@ -65,9 +55,6 @@ public class MainVerticle extends AbstractVerticle {
         vertx.getOrCreateContext().config().mergeIn(cfg);
         Router router = Router.router(vertx);
         router.route("/api/v1/health").handler(this::healthCheck);
-        if (cfg.containsKey("settings.js")) {
-            router.route("/statics/js/settings.js").handler(this::getConfig);
-        }
         router.route().handler(StaticHandler.create("webroot").setIndexPage("index.html"));
         return Maybe.just(router);
     }
