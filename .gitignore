@@ -5,3 +5,6 @@ target/
 **/node_modules/
 src/main/frontend/dist/
 src/main/resources/webroot/
+.classpath
+.project
+.settings/
